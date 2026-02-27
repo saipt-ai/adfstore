@@ -1,0 +1,1212 @@
+{
+	"name": "Basic_ETL_PIpeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_rxa",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.cw_items",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_rxa",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "dbo.@{item().source.table}"
+								},
+								{
+									"name": "Destination",
+									"value": "ETL_SCHEMA.@{item().destination.table}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlDWSink",
+									"writeBehavior": "Insert",
+									"tableOption": "autoCreate"
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false,
+								"translator": {
+									"value": "@item().copyActivity.translator",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SourceDataset_rxa",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().source.table"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDataset_rxa",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_table": "@item().destination.table"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"cw_items": {
+				"type": "Array",
+				"defaultValue": [
+					{
+						"source": {
+							"table": "CUSTOMERS_DATA"
+						},
+						"destination": {
+							"table": "CUSTOMERS_DATA"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CustomerKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "CustomerKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "GeographyKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "GeographyKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerAlternateKey",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CustomerAlternateKey",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Title",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Title",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FirstName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "FirstName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MiddleName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "MiddleName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "AddressLine1",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "AddressLine1",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "AddressLine2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "AddressLine2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DateFirstPurchase",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "DateFirstPurchase",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "CommuteDistance",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CommuteDistance",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FrenchEducation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "FrenchEducation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "EnglishOccupation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "EnglishOccupation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SpanishOccupation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "SpanishOccupation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FrenchOccupation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "FrenchOccupation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "HouseOwnerFlag",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "HouseOwnerFlag",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NumberCarsOwned",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "NumberCarsOwned",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "EmailAddress",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "EmailAddress",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "YearlyIncome",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "YearlyIncome",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "TotalChildren",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "TotalChildren",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "NumberChildrenAtHome",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "NumberChildrenAtHome",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "EnglishEducation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "EnglishEducation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SpanishEducation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "SpanishEducation",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LastName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "LastName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NameStyle",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NameStyle",
+											"type": "Boolean",
+											"physicalType": "bit"
+										}
+									},
+									{
+										"source": {
+											"name": "BirthDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "BirthDate",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "MaritalStatus",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "MaritalStatus",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Suffix",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Suffix",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Gender",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Gender",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "PRODUCTS_DATA"
+						},
+						"destination": {
+							"table": "PRODUCTS_DATA"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ProductKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ProductKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductSubcategoryKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ProductSubcategoryKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "WeightUnitMeasureCode",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "WeightUnitMeasureCode",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SizeUnitMeasureCode",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "SizeUnitMeasureCode",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "EnglishProductName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "EnglishProductName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "StandardCost",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "StandardCost",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductLine",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "ProductLine",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DealerPrice",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "DealerPrice",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Class",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "Class",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Style",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "Style",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Color",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Color",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SafetyStockLevel",
+											"type": "Int16",
+											"physicalType": "smallint"
+										},
+										"sink": {
+											"name": "SafetyStockLevel",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "ListPrice",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "ListPrice",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Size",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Size",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Weight",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "Weight",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "DaysToManufacture",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "DaysToManufacture",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "SALES_DATA"
+						},
+						"destination": {
+							"table": "SALES_DATA"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ProductKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ProductKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "OrderDateKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "OrderDateKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "DueDateKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "DueDateKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "ShipDateKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ShipDateKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "CustomerKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "PromotionKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "PromotionKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "SalesAmount",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "SalesAmount",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "TaxAmt",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "TaxAmt",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Freight",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "Freight",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CarrierTrackingNumber",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CarrierTrackingNumber",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerPONumber",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CustomerPONumber",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UnitPrice",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "UnitPrice",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "ExtendedAmount",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "ExtendedAmount",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "UnitPriceDiscountPct",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "UnitPriceDiscountPct",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "DiscountAmount",
+											"type": "Double",
+											"physicalType": "float"
+										},
+										"sink": {
+											"name": "DiscountAmount",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductStandardCost",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "ProductStandardCost",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "TotalProductCost",
+											"type": "Decimal",
+											"physicalType": "money"
+										},
+										"sink": {
+											"name": "TotalProductCost",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CurrencyKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "CurrencyKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "SalesTerritoryKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "SalesTerritoryKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "SalesOrderNumber",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "SalesOrderNumber",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SalesOrderLineNumber",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "SalesOrderLineNumber",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "RevisionNumber",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "RevisionNumber",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "OrderQuantity",
+											"type": "Int16",
+											"physicalType": "smallint"
+										},
+										"sink": {
+											"name": "OrderQuantity",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					},
+					{
+						"source": {
+							"table": "TIME_DATA"
+						},
+						"destination": {
+							"table": "TIME_DATA"
+						},
+						"copyActivity": {
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "TimeKey",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "TimeKey",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "FullDateAlternateKey",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "FullDateAlternateKey",
+											"type": "DateTime",
+											"physicalType": "datetime2"
+										}
+									},
+									{
+										"source": {
+											"name": "DayNumberOfWeek",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "DayNumberOfWeek",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "EnglishDayNameOfWeek",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "EnglishDayNameOfWeek",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SpanishDayNameOfWeek",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "SpanishDayNameOfWeek",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FrenchDayNameOfWeek",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "FrenchDayNameOfWeek",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FiscalSemester",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "FiscalSemester",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "MonthNumberOfYear",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "MonthNumberOfYear",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "CalendarQuarter",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "CalendarQuarter",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "CalendarYear",
+											"type": "String",
+											"physicalType": "char"
+										},
+										"sink": {
+											"name": "CalendarYear",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CalendarSemester",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "CalendarSemester",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "FiscalQuarter",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "FiscalQuarter",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "FiscalYear",
+											"type": "String",
+											"physicalType": "char"
+										},
+										"sink": {
+											"name": "FiscalYear",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DayNumberOfMonth",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "DayNumberOfMonth",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "DayNumberOfYear",
+											"type": "Int16",
+											"physicalType": "smallint"
+										},
+										"sink": {
+											"name": "DayNumberOfYear",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "WeekNumberOfYear",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										},
+										"sink": {
+											"name": "WeekNumberOfYear",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "EnglishMonthName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "EnglishMonthName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SpanishMonthName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "SpanishMonthName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "FrenchMonthName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "FrenchMonthName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-02-26T16:19:21Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
